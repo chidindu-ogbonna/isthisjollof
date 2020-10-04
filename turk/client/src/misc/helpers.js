@@ -1,4 +1,4 @@
-import UsersDB from '@/services/firebase/db-users'
+import UsersDB from '@/services/firebase/db-jollof'
 
 /**
  * Create new user from firebase auth user infos

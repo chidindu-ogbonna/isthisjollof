@@ -1,7 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
-
-import store from '@/store'
+import 'firebase/firestore'
 
 const config = {
   apiKey: 'AIzaSyB1M3Weqb9XapVvHHpRhWl8E78xZiEv0KM',
@@ -17,22 +16,7 @@ if (!firebase.apps.length) {
   firebase.initializeApp(config)
 }
 
-// Lazy load firestore with async import is important for performance
-let asyncFirestore = null
-export const firestore = () => {
-  if (!asyncFirestore) {
-    asyncFirestore = import(/* webpackChunkName: "chunk-firestore" */ 'firebase/firestore').then(
-      () => {
-        firebase.firestore().enablePersistence({ synchronizeTabs: true })
-        return firebase.firestore()
-      }
-    )
-  }
-  return asyncFirestore
-}
-
-firebase.auth().onAuthStateChanged(user => {
-  store.dispatch('authentication/login', user)
-})
-
+const db = firebase.firestore()
+export const jollof = db.collection('temp')
+export { db }
 export default firebase

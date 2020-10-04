@@ -5,10 +5,13 @@ import router from './router'
 import store from './store'
 import '@/misc/register-service-worker'
 import '@/misc/handle-network-status'
-import '@/services/firebase'
-// import '@/services/firebase/authentication'
 import '@/misc/handle-apple-install-prompt'
+import '@/services/firebase'
+import '@/services/vuefire'
 import 'pwacompat'
+
+import '@/assets/css/tailwind.css'
+import '@/assets/css/main.scss'
 
 Vue.config.productionTip = false
 
