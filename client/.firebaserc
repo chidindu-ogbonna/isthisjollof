@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "t-ogbonna"
+  },
+  "targets": {
+    "t-ogbonna": {
+      "hosting": {
+        "main": [
+          "isthisjollof"
+        ]
+      }
+    }
+  }
+}

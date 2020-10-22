@@ -4,16 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "cat .env.development > .env; nuxt",
-    "build:prod": "cat .env.production > .env; nuxt build",
-    "build:staging": "cat .env.staging > .env; nuxt build",
-    "build:development": "cat .env.development > .env; nuxt build",
+    "build:prod": "cat .env.production > .env; yarn generate",
+    "build:staging": "cat .env.staging > .env; yarn generate",
     "start": "nuxt start",
     "generate": "nuxt generate",
     "lint:js": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lint": "yarn lint:js",
     "test": "jest",
-    "deploy:staging": "./deploy-staging.sh",
-    "deploy:prod": "./deploy-prod.sh"
+    "deploy:staging": "yarn build:staging && firebase hosting:channel:deploy staging",
+    "deploy:prod": "yarn build:prod && firebase deploy"
   },
   "lint-staged": {
     "*.{js,vue}": "eslint"
