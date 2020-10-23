@@ -1,13 +1,10 @@
 <template>
   <client-only>
-    <notifications :duration="5000" position="top right">
+    <notifications :duration="60000" position="top center">
       <template slot="body" slot-scope="props">
         <!-- props.item.type ? success|warn|error|info -->
         <div
-          class="p-3 my-2 border-l-4 rounded-full shadow-md"
-          :class="[
-            props.item.type === 'error' ? 'bg-red-500' : 'bg-primary-text',
-          ]"
+          class="p-3 m-2 border rounded-md shadow-md border-orange-2 bg-dark-gray"
         >
           <div class="flex justify-between">
             <div
@@ -15,20 +12,13 @@
               class="flex justify-start"
             >
               <div class="mr-2">
-                <info-icon
-                  class="w-6 h-6"
-                  :class="[
-                    props.item.type === 'error'
-                      ? 'text-white'
-                      : 'text-gray-600',
-                  ]"
-                ></info-icon>
+                <info-icon class="w-6 h-6 text-orange-2"></info-icon>
               </div>
               <div class="text-gray-100">
                 <div v-if="props.item.title" class="text-sm">
                   {{ props.item.title }}
                 </div>
-                <div v-if="props.item.text" class="text-xs">
+                <div v-if="props.item.text" class="text-xs text-light-gray">
                   {{ props.item.text }}
                 </div>
               </div>
