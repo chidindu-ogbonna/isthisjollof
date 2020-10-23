@@ -8,6 +8,11 @@ module.exports = {
       colors: {
         'light-gray': 'var(--light-gray)',
         'dark-gray': 'var(--dark-gray)',
+        'orange-1': 'var(--orange-1)',
+        'orange-2': 'var(--orange-2)',
+        'orange-3': 'var(--orange-3)',
+        'orange-4': 'var(--orange-4)',
+        'orange-5': 'var(--orange-5)',
         primary: 'var(--primary)',
         secondary: 'var(--secondary)',
       },
