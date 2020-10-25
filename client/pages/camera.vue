@@ -35,17 +35,17 @@ export default {
 
   data() {
     return {
-      video: null,
-      canvas: null,
       ctx: null,
+      label: '',
+      video: null,
+      imageURL: '',
+      isIOS: false,
+      canvas: null,
       webcam: null,
       streaming: false,
-      isMediaStreamAPISupported: false,
-      selectedPhoto: '',
-      isIOS: false,
       processing: false,
-      label: '',
-      imageURL: '',
+      selectedPhoto: '',
+      isMediaStreamAPISupported: false,
     }
   },
 
@@ -65,24 +65,26 @@ export default {
 
   methods: {
     async init() {
-      this.setPhotoSource()
+      this.webcam = this.$refs.video
       this.setCanvas()
-
-      if (this.isMediaStreamAPISupported) {
-        this.webcam.addEventListener('play', this.playHandler, false)
-      } else {
-        this.setCanvasProps()
-      }
 
       try {
         if (this.isMediaStreamAPISupported) {
+          this.webcam.addEventListener('play', this.playHandler, false)
+
           const devices = await navigator.mediaDevices.enumerateDevices()
           const videoDevices = devices.filter((d) => d.kind === 'videoinput')
           await this.startCapture(videoDevices)
+        } else {
+          this.$notify({ title: 'Device Not Supported' })
+          this.$store.dispatch('log/error', {
+            fatal: false,
+            action: 'not_supported',
+          })
         }
       } catch (error) {
         // console.log('Error: ', error.name, error.message)
-        this.$notify({ title: 'Unable to access camera' })
+        this.$notify({ title: 'Unable to Access Camera' })
         this.$store.dispatch('log/error', {
           fatal: true,
           action: 'camera_init',
@@ -146,16 +148,6 @@ export default {
       })
     },
 
-    setPhotoSource() {
-      if (!this.selectedPhoto && this.isMediaStreamAPISupported) {
-        this.webcam = this.$refs.video
-      } else if (this.isMediaStreamAPISupported) {
-        this.webcam = this.$refs.video
-      } else {
-        this.webcam = this.$refs.frame
-      }
-    },
-
     setCanvas() {
       this.canvas = this.$refs.canvas
       this.ctx = this.canvas.getContext('2d')
@@ -167,15 +159,16 @@ export default {
     },
 
     takePicture() {
-      this.setCanvas()
-      setTimeout(() => this.setPhotoSource())
-
       try {
         const width = this.canvas.width
         const height = this.canvas.height
         this.ctx.drawImage(this.webcam, 0, 0, width, height)
         const imageURL = this.canvas.toDataURL('image/png')
         this.setImage(imageURL)
+        this.$store.dispatch('log/cameraEvent', {
+          action: 'camera_snap',
+          label: this.label,
+        })
       } catch (error) {
         this.$store.dispatch('log/error', {
           fatal: true,
@@ -183,11 +176,6 @@ export default {
           error,
         })
       }
-
-      this.$store.dispatch('log/cameraEvent', {
-        action: 'camera_snap',
-        label: this.label,
-      })
     },
 
     closeCamera() {
@@ -210,7 +198,7 @@ export default {
     photoSelected(event) {
       if (event.target && event.target.files.length > 0) {
         this.$store.dispatch('log/cameraEvent', {
-          action: 'camera_open_complete',
+          action: 'photos_selected',
           label: this.label,
         })
         const imageURL = URL.createObjectURL(event.target.files[0])
@@ -264,7 +252,7 @@ export default {
   transition: all 0.4s ease-in-out;
   height: 100%;
   width: 100%;
-  background: rgba(4, 12, 20, 0.8);
+  background: rgba(4, 12, 20, 0.75);
   backdrop-filter: saturate(180%) blur(10px);
 
   img {
