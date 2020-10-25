@@ -1,6 +1,6 @@
 <template>
   <client-only>
-    <notifications :duration="60000" position="top center">
+    <notifications :duration="4000" position="top center">
       <template slot="body" slot-scope="props">
         <!-- props.item.type ? success|warn|error|info -->
         <div

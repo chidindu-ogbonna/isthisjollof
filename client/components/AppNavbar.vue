@@ -1,6 +1,6 @@
 <template>
   <header
-    class="fixed left-0 right-0 flex items-center justify-between w-full max-w-screen-lg px-4 mx-auto"
+    class="fixed left-0 right-0 z-20 flex items-center justify-between w-full max-w-screen-lg px-4 mx-auto"
   >
     <n-link
       v-ripple
@@ -10,7 +10,11 @@
       <icon-info class="w-6 h-6 md:w-8 md:h-8"></icon-info>
       <span class="text-xs md:text-sm">About</span>
     </n-link>
-    <n-link to="/" class="text-xl font-bold text-light-gray">
+    <n-link
+      v-if="$route.name !== 'camera'"
+      to="/"
+      class="text-lg font-bold text-light-gray"
+    >
       IsThisJollof ?
     </n-link>
     <button

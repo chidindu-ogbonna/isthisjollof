@@ -1,23 +1,23 @@
 export const actions = {
   /**
-   * Log a thread related event
+   * Log a navigation related event
    * @param {vuex.context}
    * @param {String} payload
    */
-  searchEvent({ dispatch }, payload) {
+  navEvent({ dispatch }, payload) {
     const { action, label } = payload
-    const context = { category: 'search', action, label }
+    const context = { category: 'navigation', action, label }
     dispatch('event', context)
   },
 
   /**
-   * Log a thread related event
+   * Log a camera related event
    * @param {vuex.context}
    * @param {String} payload
    */
-  threadEvent({ dispatch }, payload) {
+  cameraEvent({ dispatch }, payload) {
     const { action, label } = payload
-    const context = { category: 'thread', action, label }
+    const context = { category: 'camera', action, label }
     dispatch('event', context)
   },
 

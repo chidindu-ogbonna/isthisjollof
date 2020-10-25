@@ -45,6 +45,10 @@ export default {
 
   modules: ['@nuxtjs/pwa'],
 
+  router: {
+    middleware: 'track',
+  },
+
   pwa: {
     manifest: {
       name: 'IsThisJollof',

@@ -274,3 +274,4 @@ dist
 service-account.json
 service_account.json
 
+.DS_Store

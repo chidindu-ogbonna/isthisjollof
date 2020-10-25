@@ -39,7 +39,7 @@
   width: 5px;
   height: 18px;
   border-radius: 10px;
-  background-color: var(--primary);
+  background-color: var(--green);
 }
 
 .ml-loader div:nth-child(1) {
