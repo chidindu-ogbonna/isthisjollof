@@ -4,16 +4,15 @@
       <video ref="video" autoplay></video>
 
       <input
-        ref="camera"
+        ref="fileExp"
         class="hidden"
         type="file"
         accept="image/*"
-        capture="camera"
         @change="photoSelected"
       />
 
       <div ref="frame" class="opacity-0 img-container">
-        <img ref="image" class="" src="" alt="" />
+        <img :src="selectedPhoto" alt="" />
         <div v-if="processing" class="absolute">
           <app-loader></app-loader>
         </div>
@@ -25,6 +24,7 @@
     <camera-controls
       @close-camera="closeCamera"
       @take-picture="takePicture"
+      @open-photos="openPhotos"
     ></camera-controls>
   </div>
 </template>
@@ -36,17 +36,16 @@ export default {
   data() {
     return {
       video: null,
-      active: false,
       canvas: null,
       ctx: null,
-      decoder: null,
       webcam: null,
       streaming: false,
       isMediaStreamAPISupported: false,
-      selectedPhoto: null,
+      selectedPhoto: '',
       isIOS: false,
       processing: false,
       label: '',
+      imageURL: '',
     }
   },
 
@@ -55,9 +54,6 @@ export default {
     this.isMediaStreamAPISupported = navigator && navigator.mediaDevices
 
     await this.init()
-    // setTimeout(() => {
-    //   if (this.isMediaStreamAPISupported) this.scan()
-    // }, 1000)
 
     this.$on('hook:beforeDestroy', () => {
       if (this.webcam) {
@@ -92,25 +88,6 @@ export default {
           action: 'camera_init',
           error,
         })
-      }
-    },
-
-    scan() {
-      this.active = true
-      this.setCanvas()
-
-      setTimeout(() => this.setPhotoSource())
-
-      if (!this.active) return
-
-      try {
-        const width = this.canvas.width
-        const height = this.canvas.height
-        this.ctx.drawImage(this.webcam, 0, 0, width, height)
-        const imageURL = this.canvas.toDataURL('image/png')
-        this.setImage(imageURL)
-      } catch (error) {
-        console.log('error: ', error)
       }
     },
 
@@ -172,6 +149,8 @@ export default {
     setPhotoSource() {
       if (!this.selectedPhoto && this.isMediaStreamAPISupported) {
         this.webcam = this.$refs.video
+      } else if (this.isMediaStreamAPISupported) {
+        this.webcam = this.$refs.video
       } else {
         this.webcam = this.$refs.frame
       }
@@ -188,10 +167,25 @@ export default {
     },
 
     takePicture() {
-      const cameraBtn = this.$refs.camera
-      cameraBtn.click()
+      this.setCanvas()
+      setTimeout(() => this.setPhotoSource())
+
+      try {
+        const width = this.canvas.width
+        const height = this.canvas.height
+        this.ctx.drawImage(this.webcam, 0, 0, width, height)
+        const imageURL = this.canvas.toDataURL('image/png')
+        this.setImage(imageURL)
+      } catch (error) {
+        this.$store.dispatch('log/error', {
+          fatal: true,
+          action: 'camera_snap',
+          error,
+        })
+      }
+
       this.$store.dispatch('log/cameraEvent', {
-        action: 'camera_open_start',
+        action: 'camera_snap',
         label: this.label,
       })
     },
@@ -202,6 +196,15 @@ export default {
         label: this.label,
       })
       this.$router.push('/')
+    },
+
+    openPhotos() {
+      const fileBtn = this.$refs.fileExp
+      fileBtn.click()
+      this.$store.dispatch('log/cameraEvent', {
+        action: 'photos_open',
+        label: this.label,
+      })
     },
 
     photoSelected(event) {
@@ -217,10 +220,7 @@ export default {
 
     setImage(url) {
       this.frame = this.$refs.frame
-      this.image = this.$refs.image
-
       this.frame.classList.replace('opacity-0', 'opacity-100')
-      this.image.src = url
       this.selectedPhoto = url
     },
   },
@@ -234,10 +234,22 @@ export default {
   height: 100%;
   overflow: hidden;
   background-color: var(--dark-gray);
-}
 
-.camera__layout-content {
-  height: inherit;
+  &-content {
+    height: inherit;
+
+    video {
+      transform: translateX(-50%) translateY(-50%);
+      top: 50%;
+      left: 50%;
+      max-width: none;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      position: absolute;
+    }
+  }
 }
 
 .img-container {
@@ -252,7 +264,7 @@ export default {
   transition: all 0.4s ease-in-out;
   height: 100%;
   width: 100%;
-  background: rgba(4, 12, 20, 0.7);
+  background: rgba(4, 12, 20, 0.8);
   backdrop-filter: saturate(180%) blur(10px);
 
   img {
@@ -260,17 +272,5 @@ export default {
     height: auto;
     margin: auto;
   }
-}
-
-video {
-  transform: translateX(-50%) translateY(-50%);
-  top: 50%;
-  left: 50%;
-  max-width: none;
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
-  position: absolute;
 }
 </style>

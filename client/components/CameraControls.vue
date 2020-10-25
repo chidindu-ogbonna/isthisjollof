@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed bottom-0 left-0 right-0 flex items-end justify-center w-full max-w-screen-sm px-4 py-4 mx-auto md:py-6"
+    class="fixed bottom-0 left-0 right-0 flex items-end justify-between w-full max-w-screen-sm px-4 py-8 mx-auto md:py-6"
   >
     <button
       v-ripple
@@ -16,14 +16,22 @@
     >
       <icon-camera class="w-10 h-10 md:w-12 md:h-12"></icon-camera>
     </button>
+    <button
+      v-ripple
+      class="inline-flex items-center justify-center mx-5 bg-transparent rounded-full focus:outline-none"
+      @click="$emit('open-photos')"
+    >
+      <icon-image class="w-12 h-12 text-white md:w-16 md:h-16"></icon-image>
+    </button>
   </div>
 </template>
 
 <script>
+import IconImage from '@/assets/svg/image.svg?inline'
 import IconCamera from '@/assets/svg/camera.svg?inline'
 import IconX from '@/assets/svg/x.svg?inline'
 
 export default {
-  components: { IconCamera, IconX },
+  components: { IconCamera, IconX, IconImage },
 }
 </script>
