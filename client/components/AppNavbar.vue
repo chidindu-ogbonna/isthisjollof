@@ -8,7 +8,7 @@
       class="inline-flex flex-col items-center justify-center px-2 py-2 rounded-full focus:outline-none"
     >
       <icon-info
-        v-if="$route.name !== 'about'"
+        v-if="leftLink.showAbout"
         class="w-6 h-6 md:w-8 md:h-8"
       ></icon-info>
       <icon-arrow-left v-else class="w-6 h-6 md:w-8 md:h-8"></icon-arrow-left>
@@ -44,9 +44,11 @@ export default {
 
     leftLink() {
       if (this.$route.name === 'about') {
-        return { name: 'Home', link: '/' }
+        return { name: 'Back', link: '/', showAbout: false }
+      } else if (this.$route.name === 'result') {
+        return { name: 'Back', link: '/', showAbout: false }
       } else {
-        return { name: 'About', link: '/about' }
+        return { name: 'About', link: '/about', showAbout: true }
       }
     },
   },

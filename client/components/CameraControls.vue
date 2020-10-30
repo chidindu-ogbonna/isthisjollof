@@ -1,37 +1,58 @@
 <template>
   <div
     class="fixed bottom-0 left-0 right-0 flex items-end justify-between w-full max-w-screen-sm px-4 py-8 mx-auto md:py-6"
+    style="background: var(--dark-gray-4)"
   >
     <button
-      v-ripple
-      class="inline-flex items-center justify-center w-12 h-12 mx-5 rounded-full bg-red md:w-16 md:h-16 focus:outline-none"
-      @click="$emit('close-camera')"
+      v-ripple.click
+      class="inline-flex items-center px-2 py-2 text-white transition-opacity duration-200 ease-in-out rounded-md focus:outline-none bg-orange-1 hover:opacity-50"
+      @click="$emit('open-camera')"
     >
-      <icon-x class="w-8 h-8 md:w-10 md:h-10"></icon-x>
+      <icon-camera class="w-5 h-5 mr-2"></icon-camera>
+      Open Camera
     </button>
+
     <button
-      v-ripple
-      class="inline-flex items-center justify-center w-16 h-16 mx-5 rounded-full bg-green md:w-20 md:h-20 focus:outline-none"
-      @click="$emit('take-picture')"
+      v-ripple.click
+      class="inline-flex items-center px-2 py-2 text-white transition-opacity duration-200 ease-in-out rounded-md focus:outline-none bg-blue hover:opacity-50"
+      @click="shareWithNative"
     >
-      <icon-camera class="w-10 h-10 md:w-12 md:h-12"></icon-camera>
-    </button>
-    <button
-      v-ripple
-      class="inline-flex items-center justify-center mx-5 bg-transparent rounded-full focus:outline-none"
-      @click="$emit('open-photos')"
-    >
-      <icon-image class="w-12 h-12 text-white md:w-16 md:h-16"></icon-image>
+      <icon-send class="w-5 h-5 mr-2"></icon-send>
+      Share
     </button>
   </div>
 </template>
 
 <script>
-import IconImage from '@/assets/svg/image.svg?inline'
 import IconCamera from '@/assets/svg/camera.svg?inline'
-import IconX from '@/assets/svg/x.svg?inline'
+import IconSend from '@/assets/svg/send.svg?inline'
 
 export default {
-  components: { IconCamera, IconX, IconImage },
+  components: { IconCamera, IconSend },
+
+  computed: {
+    url() {
+      return window.location.href
+    },
+  },
+
+  methods: {
+    async shareWithNative() {
+      const action = 'share'
+      const category = 'app'
+
+      if (navigator.share) {
+        await navigator.share({ title: 'IsThisJollof ?', url: this.url })
+        this.$store.dispatch('log/event', { action, label: '', category })
+      } else {
+        const error = new Error('DeviceNotSupported')
+        this.$store.dispatch('log/error', { fatal: false, action, error })
+        this.$notify({
+          type: 'error',
+          title: 'Device Not Supported',
+        })
+      }
+    },
+  },
 }
 </script>
