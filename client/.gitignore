@@ -138,4 +138,5 @@ sw.*
 
 .vercel
 service-accounts/*.json
+.DS_Store
 .firebase/
