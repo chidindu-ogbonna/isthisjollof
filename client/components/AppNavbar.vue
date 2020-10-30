@@ -4,18 +4,15 @@
   >
     <n-link
       v-ripple
-      to="/about"
+      :to="leftLink.link"
       class="inline-flex flex-col items-center justify-center px-2 py-2 rounded-full focus:outline-none"
     >
-      <icon-info class="w-6 h-6 md:w-8 md:h-8"></icon-info>
-      <span class="text-xs md:text-sm">About</span>
-    </n-link>
-    <n-link
-      v-if="$route.name !== 'camera'"
-      to="/"
-      class="text-lg font-bold text-light-gray"
-    >
-      IsThisJollof ?
+      <icon-info
+        v-if="$route.name !== 'about'"
+        class="w-6 h-6 md:w-8 md:h-8"
+      ></icon-info>
+      <icon-arrow-left v-else class="w-6 h-6 md:w-8 md:h-8"></icon-arrow-left>
+      <span class="text-xs md:text-sm">{{ leftLink.name }}</span>
     </n-link>
     <button
       v-ripple
@@ -31,24 +28,40 @@
 <script>
 import IconSend from '@/assets/svg/send.svg?inline'
 import IconInfo from '@/assets/svg/info-circle.svg?inline'
+import IconArrowLeft from '@/assets/svg/arrow-left.svg?inline'
 
 export default {
   components: {
     IconSend,
     IconInfo,
+    IconArrowLeft,
   },
 
   computed: {
     url() {
       return window.location.href
     },
+
+    leftLink() {
+      if (this.$route.name === 'about') {
+        return { name: 'Home', link: '/' }
+      } else {
+        return { name: 'About', link: '/about' }
+      }
+    },
   },
 
   methods: {
     async shareWithNative() {
+      const action = 'share'
+      const category = 'app'
+
       if (navigator.share) {
         await navigator.share({ title: 'IsThisJollof ?', url: this.url })
+        this.$store.dispatch('log/event', { action, label: '', category })
       } else {
+        const error = new Error('DeviceNotSupported')
+        this.$store.dispatch('log/error', { fatal: false, action, error })
         this.$notify({
           type: 'error',
           title: 'Device Not Supported',
