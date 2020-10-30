@@ -1,20 +1,29 @@
 <template>
-  <div class="max-w-screen-lg px-4 mx-auto sm:py-12 lg:py-0">
+  <div class="max-w-screen-lg px-4 mx-auto sm:py-20 lg:py-0">
     <div class="flex flex-col items-center justify-center min-h-screen">
-      <div
-        class="flex items-center justify-center mb-10 text-xl font-medium"
-        @click="openCamera('text')"
-      >
-        <icon-camera class="w-6 h-6 mr-2 md:w-8 md:h-8"></icon-camera>
-        Tap to Scan
+      <div class="mb-10 text-center">
+        <h1 class="mb-2 text-4xl font-bold leading-10 md:text-5xl">
+          Your Eyes Don't Know
+          <span class="text-orange-1">Jollof Rice</span>
+        </h1>
+        <h2 class="text-lg font-medium leading-6 md:text-xl text-lighter-gray">
+          Find out if that plate of rice is Jollof or not using your camera.
+        </h2>
       </div>
       <button
         v-ripple
         class="rounded-full scale-in-center focus:outline-none pulsate-fwd"
         @click="openCamera('button')"
       >
-        <icon-scan class="w-56 h-56 md:w-64 md:h-64 text-orange-1"></icon-scan>
+        <app-scan></app-scan>
       </button>
+      <div
+        class="flex items-center justify-center mt-5"
+        @click="openCamera('text')"
+      >
+        <icon-camera class="w-5 h-5 mr-2 text-white"></icon-camera>
+        Tap to Open Camera
+      </div>
     </div>
   </div>
 </template>
