@@ -1,7 +1,10 @@
 <template>
   <div
-    class="fixed bottom-0 left-0 right-0 flex items-end justify-between w-full max-w-screen-sm px-4 py-8 mx-auto text-sm md:py-6"
-    style="background: var(--dark-gray-4)"
+    class="fixed bottom-0 left-0 right-0 flex items-end justify-between w-full max-w-screen-sm px-4 py-2 pb-8 mx-auto text-sm mb:pb-6"
+    style="
+      background: var(--dark-gray-4);
+      backdrop-filter: saturate(180%) blur(5px);
+    "
   >
     <button
       v-ripple.click
