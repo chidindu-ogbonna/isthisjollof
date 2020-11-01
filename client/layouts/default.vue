@@ -1,10 +1,11 @@
 <template>
   <div>
-    <app-navbar></app-navbar>
-    <div class="">
+    <transition name="top-slide">
+      <app-navbar></app-navbar>
+    </transition>
+    <div>
       <Nuxt />
     </div>
-    <!-- <app-footer></app-footer> -->
     <app-notification></app-notification>
   </div>
 </template>

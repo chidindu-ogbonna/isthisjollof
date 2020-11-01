@@ -1,11 +1,12 @@
 <template>
   <header
-    class="fixed left-0 right-0 z-20 flex items-center justify-between w-full max-w-screen-lg px-4 mx-auto"
+    v-if="$route.name !== 'result'"
+    class="fixed left-0 right-0 z-20 flex items-center justify-between w-full max-w-screen-lg px-4 py-2 mx-auto"
   >
     <n-link
       v-ripple
       :to="leftLink.link"
-      class="inline-flex flex-col items-center justify-center px-2 py-2 rounded-full focus:outline-none"
+      class="inline-flex flex-col items-center justify-center px-2 rounded-full focus:outline-none"
     >
       <icon-info
         v-if="leftLink.showAbout"
@@ -16,7 +17,7 @@
     </n-link>
     <button
       v-ripple
-      class="inline-flex flex-col items-center justify-center px-2 py-2 rounded-full focus:outline-none"
+      class="inline-flex flex-col items-center justify-center px-2 rounded-full focus:outline-none"
       @click="shareWithNative"
     >
       <icon-send class="w-6 h-6 md:w-8 md:h-8"></icon-send>
@@ -44,8 +45,6 @@ export default {
 
     leftLink() {
       if (this.$route.name === 'about') {
-        return { name: 'Back', link: '/', showAbout: false }
-      } else if (this.$route.name === 'result') {
         return { name: 'Back', link: '/', showAbout: false }
       } else {
         return { name: 'About', link: '/about', showAbout: true }
