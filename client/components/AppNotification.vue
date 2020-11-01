@@ -4,7 +4,7 @@
       <template slot="body" slot-scope="props">
         <!-- props.item.type ? success|warn|error|info -->
         <div
-          class="p-3 m-2 border rounded-md shadow-md border-orange-2 bg-dark-gray"
+          class="p-3 m-2 border rounded-md shadow-md border-primary bg-dark-gray"
         >
           <div class="flex justify-between">
             <div
@@ -12,7 +12,7 @@
               class="flex justify-start"
             >
               <div class="mr-2">
-                <info-icon class="w-6 h-6 text-orange-2"></info-icon>
+                <info-icon class="w-6 h-6 text-primary"></info-icon>
               </div>
               <div class="text-gray-100">
                 <div v-if="props.item.title" class="text-sm">
