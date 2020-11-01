@@ -37,6 +37,7 @@ module.exports = {
       colors: {
         'light-gray': 'var(--light-gray)',
         'lighter-gray': 'var(--lighter-gray)',
+        'gray-1': 'var(--gray-1)',
         'dark-gray': 'var(--dark-gray)',
         'orange-1': 'var(--orange-1)',
         'orange-2': 'var(--orange-2)',
