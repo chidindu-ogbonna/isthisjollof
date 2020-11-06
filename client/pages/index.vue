@@ -18,7 +18,7 @@
         <app-scan></app-scan>
       </button>
       <div
-        class="flex items-center justify-center mt-5"
+        class="flex items-center justify-center mt-5 cursor-pointer"
         @click="openCamera('text')"
       >
         <icon-camera class="w-5 h-5 mr-2 text-white"></icon-camera>
