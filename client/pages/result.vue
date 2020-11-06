@@ -5,10 +5,19 @@
         <img :src="selectedPhoto" alt="" />
         <div
           v-if="processing"
+          style="background: rgba(4, 12, 20, 0.5)"
           class="fixed flex flex-col items-center justify-center w-full h-full"
         >
-          <app-loader class="mb-4"></app-loader>
-          <p class="text-lg font-medium">Processing...</p>
+          <div
+            class="flex flex-col items-center justify-center p-6 rounded-lg"
+            style="
+              background: rgba(245, 245, 245, 0.5);
+              backdrop-filter: saturate(180%) blur(5px);
+            "
+          >
+            <app-loader class="mb-4"></app-loader>
+            <p class="text-sm font-medium text-gray-1">Image processing...</p>
+          </div>
         </div>
       </div>
     </main>
@@ -33,46 +42,50 @@
     <transition name="top-slide">
       <div
         v-if="showResult"
-        class="fixed top-0 left-0 right-0 z-20 flex flex-col items-center justify-center max-w-screen-sm py-4 mx-auto shadow-xl"
-        :class="[result.value ? 'bg-green' : 'bg-red']"
+        class="fixed top-0 left-0 right-0 z-20 max-w-screen-sm px-2 mx-auto"
       >
-        <div class="flex justify-end w-full px-8">
-          <button
-            v-ripple.click
-            class="p-2 rounded-full focus:outline-none"
-            style="background: rgba(249, 249, 249, 0.4)"
-            @click="showResult = !showResult"
-          >
-            <icon-x class="w-6 h-6 text-white"></icon-x>
-          </button>
-        </div>
-        <div class="text-4xl font-bold text-white">
-          <p v-if="result.value">Is Jollof!</p>
-          <p v-else>Not Jollof!</p>
-          <icon-rice class="w-24 h-24 mx-auto"></icon-rice>
+        <div
+          class="flex flex-col items-center justify-center w-full h-full p-4 rounded-b-lg shadow-xl"
+          :class="[result.value ? 'bg-green' : 'bg-red']"
+        >
+          <div class="flex justify-end w-full">
+            <button
+              v-ripple.click
+              class="p-2 rounded-full focus:outline-none"
+              style="background: rgba(249, 249, 249, 0.5)"
+              @click="showResult = !showResult"
+            >
+              <icon-x class="w-6 h-6 text-white"></icon-x>
+            </button>
+          </div>
+          <div class="text-4xl font-bold text-white shake">
+            <p v-if="result.value">Is Jollof!</p>
+            <p v-else>Not Jollof!</p>
+            <icon-check v-if="result.value" class="w-20 h-20"></icon-check>
+            <icon-cancel v-else class="w-20 h-20"></icon-cancel>
+          </div>
         </div>
       </div>
     </transition>
 
     <transition name="bottom-slide">
-      v-if="!processing"
-      <camera-controls
-        @close-camera="closeCamera"
+      <!-- v-if="!processing" -->
+      <result-footer
+        @go-back="closeCamera"
         @open-camera="openCamera"
-        @open-photos="openPhotos"
-      ></camera-controls>
+        @share="shareWithNative"
+      ></result-footer>
     </transition>
   </div>
 </template>
 
 <script>
-import IconRice from '@/assets/svg/rice.svg?inline'
 import IconX from '@/assets/svg/x.svg?inline'
 
 export default {
   name: 'Result',
 
-  components: { IconRice, IconX },
+  components: { IconX },
 
   data() {
     return {
@@ -86,6 +99,16 @@ export default {
     selectedPhoto() {
       return this.$store.state.app.selectedPhoto
     },
+
+    url() {
+      return 'https://isthisjollof.com/'
+    },
+  },
+
+  created() {
+    if (!this.selectedPhoto) {
+      this.$router.push({ name: 'index' })
+    }
   },
 
   mounted() {
@@ -101,8 +124,8 @@ export default {
       setTimeout(() => {
         this.showResult = true
         this.result = { value: true }
-        this.processing = false
-      }, 5000)
+        // this.processing = false
+      }, 100)
     },
 
     openCamera(trigger) {
@@ -149,6 +172,23 @@ export default {
         })
       }
     },
+
+    async shareWithNative() {
+      const action = 'share'
+      const category = 'app'
+
+      if (navigator.share) {
+        await navigator.share({ title: 'IsThisJollof ?', url: this.url })
+        this.$store.dispatch('log/event', { action, label: '', category })
+      } else {
+        const error = new Error('DeviceNotSupported')
+        this.$store.dispatch('log/error', { fatal: false, action, error })
+        this.$notify({
+          type: 'error',
+          title: 'Device Not Supported',
+        })
+      }
+    },
   },
 }
 </script>
@@ -189,14 +229,41 @@ export default {
   height: 100%;
   width: 100%;
 
-  & > div {
-    background: rgba(4, 12, 20, 0.85);
-  }
-
   img {
     width: auto;
     height: auto;
     margin: auto;
+  }
+}
+
+.shake {
+  animation: shake 1s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  animation-delay: 2s;
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
   }
 }
 </style>
