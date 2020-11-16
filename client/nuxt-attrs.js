@@ -43,13 +43,13 @@ export const meta = [
     hid: 'twitter:image',
     name: 'twitter:image',
     content:
-      'https://res.cloudinary.com/cheapflix/image/upload/v1604265689/isthisjollof-card.png',
+      'https://res.cloudinary.com/cheapflix/image/upload/v1605550411/isthisjollof.png',
   },
   {
     hid: 'og:image',
     property: 'og:image',
     content:
-      'https://res.cloudinary.com/cheapflix/image/upload/v1604265689/isthisjollof-card.png',
+      'https://res.cloudinary.com/cheapflix/image/upload/v1605550411/isthisjollof.png',
   },
   {
     hid: 'twitter:image:alt',
