@@ -1,5 +1,24 @@
 <template>
   <div class="camera__layout">
+    <transition name="top-slide">
+      <div
+        v-if="showResult"
+        class="fixed top-0 left-0 right-0 z-20 max-w-screen-sm px-2 mx-auto"
+      >
+        <div
+          class="flex flex-col items-center justify-center w-full h-full px-4 py-8 rounded-b-lg shadow-xl"
+          :class="[result.value ? 'bg-green' : 'bg-red']"
+        >
+          <div class="text-4xl font-bold text-white shake">
+            <p v-if="result.value">Is Jollof!</p>
+            <p v-else>Not Jollof!</p>
+            <icon-check v-if="result.value" class="w-20 h-20"></icon-check>
+            <icon-cancel v-else class="w-20 h-20"></icon-cancel>
+          </div>
+        </div>
+      </div>
+    </transition>
+
     <main class="camera__layout-content">
       <div class="img-container">
         <img :src="selectedPhoto" alt="" />
@@ -20,53 +39,24 @@
           </div>
         </div>
       </div>
+
+      <input
+        ref="camera"
+        class="hidden"
+        type="file"
+        accept="image/*"
+        capture
+        @change="photoSelected"
+      />
+
+      <input
+        ref="photos"
+        class="hidden"
+        type="file"
+        accept="image/*"
+        @change="photoSelected"
+      />
     </main>
-
-    <input
-      ref="camera"
-      class="hidden"
-      type="file"
-      accept="image/*"
-      capture
-      @change="photoSelected"
-    />
-
-    <input
-      ref="photos"
-      class="hidden"
-      type="file"
-      accept="image/*"
-      @change="photoSelected"
-    />
-
-    <transition name="top-slide">
-      <div
-        v-if="showResult"
-        class="fixed top-0 left-0 right-0 z-20 max-w-screen-sm px-2 mx-auto"
-      >
-        <div
-          class="flex flex-col items-center justify-center w-full h-full p-4 rounded-b-lg shadow-xl"
-          :class="[result.value ? 'bg-green' : 'bg-red']"
-        >
-          <div class="flex justify-end w-full">
-            <button
-              v-ripple.click
-              class="p-2 rounded-full focus:outline-none"
-              style="background: rgba(249, 249, 249, 0.5)"
-              @click="showResult = !showResult"
-            >
-              <icon-x class="w-6 h-6 text-white"></icon-x>
-            </button>
-          </div>
-          <div class="text-4xl font-bold text-white shake">
-            <p v-if="result.value">Is Jollof!</p>
-            <p v-else>Not Jollof!</p>
-            <icon-check v-if="result.value" class="w-20 h-20"></icon-check>
-            <icon-cancel v-else class="w-20 h-20"></icon-cancel>
-          </div>
-        </div>
-      </div>
-    </transition>
 
     <transition name="bottom-slide">
       <!-- v-if="!processing" -->
@@ -80,12 +70,8 @@
 </template>
 
 <script>
-import IconX from '@/assets/svg/x.svg?inline'
-
 export default {
   name: 'Result',
-
-  components: { IconX },
 
   data() {
     return {
