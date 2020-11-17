@@ -164,14 +164,19 @@ export default {
       const category = 'app'
 
       if (navigator.share) {
-        await navigator.share({ title: 'IsThisJollof ?', url: this.url })
-        this.$store.dispatch('log/event', { action, label: '', category })
+        await navigator.share({ title: 'Is This Jollof?', url: this.url })
+        this.$store.dispatch('log/event', {
+          action,
+          label: 'navigator-share',
+          category,
+        })
       } else {
-        const error = new Error('DeviceNotSupported')
-        this.$store.dispatch('log/error', { fatal: false, action, error })
-        this.$notify({
-          type: 'error',
-          title: 'Device Not Supported',
+        const link = `http://twitter.com/share?text=${'Check this out: Is This Jollof?'}&url=https://isthisjollof.com`
+        window.open(link, '_blank')
+        this.$store.dispatch('log/event', {
+          action,
+          label: 'web-share',
+          category,
         })
       }
     },

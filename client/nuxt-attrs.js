@@ -2,7 +2,7 @@ export const meta = [
   {
     hid: 'description',
     name: 'description',
-    content: 'Find out if this rice is jollof rice or not',
+    content: 'Find out if that food is jollof rice or not',
   },
   // summary, summary_large_image, app, player cards
   {
@@ -13,12 +13,12 @@ export const meta = [
   {
     hid: 'twitter:title',
     name: 'twitter:title',
-    content: 'IsThisJollof',
+    content: 'Is This Jollof?',
   },
   {
     hid: 'og:title',
     property: 'og:title',
-    content: 'IsThisJollof',
+    content: 'Is This Jollof?',
   },
   { name: 'twitter:site', content: '@chidinduogbonna' },
   {
@@ -32,12 +32,12 @@ export const meta = [
   {
     hid: 'twitter:description',
     name: 'twitter:description',
-    content: 'Find out if this rice is jollof rice or not',
+    content: 'Find out if that food is jollof rice or not',
   },
   {
     hid: 'og:description',
     property: 'og:description',
-    content: 'Find out if this rice is jollof rice or not',
+    content: 'Find out if that food is jollof rice or not',
   },
   {
     hid: 'twitter:image',
@@ -54,7 +54,7 @@ export const meta = [
   {
     hid: 'twitter:image:alt',
     name: 'twitter:image:alt',
-    content: 'Listen to your favourite twitter threads',
+    content: 'Find out if that food is jollof rice or not',
   },
   { hid: 'og:type', property: 'og:type', content: 'website' },
   { property: 'og:email', content: 'hello@chidinduogbonna.com' },

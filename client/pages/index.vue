@@ -3,13 +3,22 @@
     <div class="flex flex-col items-center justify-center min-h-screen">
       <div class="mb-16 text-center">
         <h1 class="mb-2 text-4xl font-bold leading-10 md:mb-4 md:text-5xl">
-          Your Eyes Don't Know
-          <span class="text-orange-1">Jollof Rice</span>
+          Is This
+          <span class="text-orange-1">Jollof Rice</span>?
         </h1>
         <h2 class="text-lg font-medium leading-6 md:text-xl text-lighter-gray">
-          Find out if that plate of rice is Jollof or not using your camera.
+          Let your phone answer that question.
         </h2>
       </div>
+
+      <input
+        ref="camera"
+        class="hidden"
+        type="file"
+        accept="image/*"
+        capture
+        @change="photoSelected"
+      />
       <button
         v-ripple
         class="rounded-full scale-in-center focus:outline-none pulsate-fwd"
@@ -25,15 +34,6 @@
         Tap to Open Camera
       </div>
     </div>
-
-    <input
-      ref="camera"
-      class="hidden"
-      type="file"
-      accept="image/*"
-      capture
-      @change="photoSelected"
-    />
   </div>
 </template>
 

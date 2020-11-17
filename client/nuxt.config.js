@@ -6,7 +6,7 @@ export default {
   target: 'static',
 
   head: {
-    title: 'IsThisJollof ?',
+    title: 'Is This Jollof?',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -22,13 +22,11 @@ export default {
   css: ['@/assets/css/main.scss', '@/assets/css/transitions.scss'],
 
   loading: {
-    color: '#4d545b',
+    color: '#e7b20d',
     height: '2px',
   },
 
   plugins: [
-    { src: '@/plugins/filters.js' },
-    { src: '@/plugins/vee-validate.js' },
     { src: '@/plugins/vue-gtag.js', mode: 'client' },
     { src: '@/plugins/v-ripple.js', mode: 'client' },
     { src: '@/plugins/vue-notification.js', mode: 'client' },
@@ -53,11 +51,11 @@ export default {
     manifest: {
       name: 'IsThisJollof',
       short_name: 'IsThisJollof',
-      description: 'Is this jollof or not',
+      description: 'Find out if that food is jollof rice or not',
       start_url: '/?standalone=true',
       display: 'standalone',
       theme_color: '#040c14',
-      background_color: '#ffffff',
+      background_color: '#040c14',
       useWebmanifestExtension: false,
     },
     icon: {
@@ -67,7 +65,5 @@ export default {
     },
   },
 
-  build: {
-    transpile: ['vee-validate/dist/rules'],
-  },
+  build: {},
 }
