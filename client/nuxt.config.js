@@ -1,6 +1,12 @@
 import { icons, meta } from './nuxt-attrs'
 
 export default {
+  publicRuntimeConfig: {
+    nodeEnv: process.env.NODE_ENV,
+    appMode: process.env.APP_MODE,
+    googleAnalytics: process.env.GOOGLE_ANALYTICS,
+  },
+
   target: 'static',
 
   head: {
@@ -32,12 +38,7 @@ export default {
 
   components: true,
 
-  buildModules: [
-    '@nuxtjs/svg',
-    '@nuxtjs/eslint-module',
-    '@nuxtjs/tailwindcss',
-    '@nuxtjs/dotenv',
-  ],
+  buildModules: ['@nuxtjs/svg', '@nuxtjs/eslint-module', '@nuxtjs/tailwindcss'],
 
   modules: ['@nuxtjs/pwa'],
 

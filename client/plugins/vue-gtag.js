@@ -2,8 +2,10 @@ import Vue from 'vue'
 import VueGtag from 'vue-gtag'
 
 export default (context, inject) => {
+  const { $config } = context
+
   Vue.use(VueGtag, {
-    config: { id: process.env.GOOGLE_ANALYTICS },
+    config: { id: $config.googleAnalytics },
     params: {
       send_page_view: true,
     },
