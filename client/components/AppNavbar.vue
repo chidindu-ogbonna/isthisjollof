@@ -18,7 +18,7 @@
     <button
       v-ripple
       class="inline-flex flex-col items-center justify-center px-2 rounded-full focus:outline-none"
-      @click="shareWithNative"
+      @click="share"
     >
       <icon-send class="w-6 h-6 md:w-8 md:h-8"></icon-send>
       <span class="text-xs md:text-sm">Share</span>
@@ -53,25 +53,16 @@ export default {
   },
 
   methods: {
-    async shareWithNative() {
+    async share() {
       const action = 'share'
-      const category = 'app'
 
       if (navigator.share) {
         await navigator.share({ title: 'Is This Jollof?', url: this.url })
-        this.$store.dispatch('log/event', {
-          action,
-          label: 'navigator-share',
-          category,
-        })
+        this.$store.dispatch('log/event', { action, content_type: 'app_share' })
       } else {
+        this.$store.dispatch('log/event', { action, content_type: 'web_share' })
         const link = `http://twitter.com/share?text=${'Check this out: Is This Jollof?'}&url=https://isthisjollof.com`
         window.open(link, '_blank')
-        this.$store.dispatch('log/event', {
-          action,
-          label: 'web-share',
-          category,
-        })
       }
     },
   },

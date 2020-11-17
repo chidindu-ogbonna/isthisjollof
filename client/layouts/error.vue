@@ -32,8 +32,11 @@ export default {
   props: ['error'],
 
   mounted() {
-    const context = { fatal: true, error: this.error }
-    this.$store.dispatch('log/error', context)
+    this.$store.dispatch('log/event', {
+      action: 'exception',
+      fatal: true,
+      description: this.error,
+    })
   },
 }
 </script>

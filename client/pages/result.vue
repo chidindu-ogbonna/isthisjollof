@@ -22,22 +22,24 @@
     <main class="camera__layout-content">
       <div class="img-container">
         <img :src="selectedPhoto" alt="" />
-        <div
-          v-if="processing"
-          style="background: rgba(4, 12, 20, 0.5)"
-          class="fixed flex flex-col items-center justify-center w-full h-full"
-        >
+        <transition name="fade">
           <div
-            class="flex flex-col items-center justify-center p-6 rounded-lg"
-            style="
-              background: rgba(245, 245, 245, 0.5);
-              backdrop-filter: saturate(180%) blur(5px);
-            "
+            v-if="processing"
+            style="background: rgba(4, 12, 20, 0.5)"
+            class="fixed flex flex-col items-center justify-center w-full h-full"
           >
-            <app-loader class="mb-4"></app-loader>
-            <p class="text-sm font-medium text-gray-1">Image processing...</p>
+            <div
+              class="flex flex-col items-center justify-center p-6 rounded-lg"
+              style="
+                background: rgba(245, 245, 245, 0.5);
+                backdrop-filter: saturate(180%) blur(5px);
+              "
+            >
+              <app-loader class="mb-4"></app-loader>
+              <p class="text-sm font-medium text-gray-1">Image processing...</p>
+            </div>
           </div>
-        </div>
+        </transition>
       </div>
 
       <input
@@ -59,11 +61,10 @@
     </main>
 
     <transition name="bottom-slide">
-      <!-- v-if="!processing" -->
       <result-footer
         @go-back="closeCamera"
         @open-camera="openCamera"
-        @share="shareWithNative"
+        @share="share"
       ></result-footer>
     </transition>
   </div>
@@ -75,9 +76,9 @@ export default {
 
   data() {
     return {
-      processing: true,
+      processing: false,
       result: null,
-      showResult: null,
+      showResult: false,
     }
   },
 
@@ -107,46 +108,31 @@ export default {
 
   methods: {
     processImage() {
+      this.processing = true
       setTimeout(() => {
         this.showResult = true
         this.result = { value: true }
-        // this.processing = false
-      }, 100)
+        this.$store.dispatch('log/event', { action: 'picture_processed' })
+        this.processing = false
+      }, 3000)
     },
 
-    openCamera(trigger) {
-      this.$store.dispatch('log/cameraEvent', {
-        action: 'open_camera',
-        label: trigger,
-      })
+    openCamera() {
+      this.$store.dispatch('log/event', { action: 'camera_opened' })
       const cameraBtn = this.$refs.camera
       cameraBtn.click()
     },
 
     closeCamera() {
-      this.$store.dispatch('log/cameraEvent', {
-        action: 'camera_close',
-        label: `closed_in: ${this.$route.name}`,
-      })
+      this.$store.dispatch('log/event', { action: 'result_closed' })
       this.$router.push('/')
     },
 
-    openPhotos() {
-      if (this.processing) return
-      const photosBtn = this.$refs.photos
-      photosBtn.click()
-      this.$store.dispatch('log/cameraEvent', {
-        action: 'photos_open',
-        label: `closed_in: ${this.$route.name}`,
-      })
-    },
-
     photoSelected(event) {
+      this.reset()
+
       if (event.target && event.target.files.length > 0) {
-        this.$store.dispatch('log/cameraEvent', {
-          action: 'photos_selected',
-          label: `selected_in: ${this.$route.name}`,
-        })
+        this.$store.dispatch('log/event', { action: 'picture_selected' })
         const imageURL = URL.createObjectURL(event.target.files[0])
         this.$store.commit('app/setImage', imageURL)
         this.processing = true
@@ -159,25 +145,24 @@ export default {
       }
     },
 
-    async shareWithNative() {
+    reset() {
+      this.processing = false
+      this.result = null
+      this.showResult = false
+      this.$store.commit('app/setImage', '')
+      this.$store.dispatch('log/event', { action: 'picture_reset' })
+    },
+
+    async share() {
       const action = 'share'
-      const category = 'app'
 
       if (navigator.share) {
         await navigator.share({ title: 'Is This Jollof?', url: this.url })
-        this.$store.dispatch('log/event', {
-          action,
-          label: 'navigator-share',
-          category,
-        })
+        this.$store.dispatch('log/event', { action, content_type: 'app_share' })
       } else {
+        this.$store.dispatch('log/event', { action, content_type: 'web_share' })
         const link = `http://twitter.com/share?text=${'Check this out: Is This Jollof?'}&url=https://isthisjollof.com`
         window.open(link, '_blank')
-        this.$store.dispatch('log/event', {
-          action,
-          label: 'web-share',
-          category,
-        })
       }
     },
   },

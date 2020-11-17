@@ -19,16 +19,17 @@
         capture
         @change="photoSelected"
       />
+
       <button
         v-ripple
         class="rounded-full scale-in-center focus:outline-none pulsate-fwd"
-        @click="openCamera('button')"
+        @click="openCamera('main-button')"
       >
         <app-scan></app-scan>
       </button>
       <div
         class="flex items-center justify-center mt-5 cursor-pointer"
-        @click="openCamera('text')"
+        @click="openCamera('text-button')"
       >
         <icon-camera class="w-5 h-5 mr-2 text-white"></icon-camera>
         Tap to Open Camera
@@ -47,23 +48,19 @@ export default {
   },
 
   methods: {
-    openCamera(trigger) {
-      this.$store.dispatch('log/cameraEvent', {
-        action: 'open_camera',
-        label: trigger,
-      })
+    openCamera(method) {
+      this.$store.dispatch('log/event', { action: 'camera_opened', method })
       const cameraBtn = this.$refs.camera
+      this.state = 'opened'
       cameraBtn.click()
     },
 
     photoSelected(event) {
+      // console.log('done')
       if (event.target && event.target.files.length > 0) {
-        this.$store.dispatch('log/cameraEvent', {
-          action: 'photos_selected',
-          label: `selected_in: ${this.$route.name}`,
-        })
+        this.$store.dispatch('log/event', { action: 'picture_selected' })
         const imageURL = URL.createObjectURL(event.target.files[0])
-        this.setImage(imageURL)
+        this.$store.commit('app/setImage', imageURL)
         this.$router.push('/result')
       } else {
         this.$notify({
@@ -71,10 +68,6 @@ export default {
           title: 'Image Not Selected',
         })
       }
-    },
-
-    setImage(imageURL) {
-      this.$store.commit('app/setImage', imageURL)
     },
   },
 }
