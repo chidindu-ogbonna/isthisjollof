@@ -1,6 +1,4 @@
-/* eslint-disable nuxt/no-cjs-in-config */
-require('dotenv').config()
-const { meta, icons } = require('./nuxt-attrs')
+import { icons, meta } from './nuxt-attrs'
 
 export default {
   target: 'static',
