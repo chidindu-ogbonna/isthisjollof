@@ -6,7 +6,7 @@
           Is This
           <span class="text-orange-1">Jollof Rice</span>?
         </h1>
-        <h2 class="text-lg font-medium leading-6 md:text-xl text-lighter-gray">
+        <h2 class="text-lg leading-6 md:text-xl text-lighter-gray">
           Let your phone answer that question.
         </h2>
       </div>

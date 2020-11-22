@@ -3,7 +3,7 @@
     <transition name="top-slide">
       <div
         v-if="showResult"
-        class="fixed top-0 left-0 right-0 z-20 max-w-screen-sm px-2 mx-auto"
+        class="fixed top-0 left-0 right-0 z-20 max-w-screen-sm mx-auto"
       >
         <div
           class="flex flex-col items-center justify-center w-full h-full px-4 py-8 rounded-b-lg shadow-xl"
@@ -36,7 +36,7 @@
               "
             >
               <app-loader class="mb-4"></app-loader>
-              <p class="text-sm font-medium text-gray-1">Image processing...</p>
+              <p class="text-sm text-gray-1">Image processing...</p>
             </div>
           </div>
         </transition>
