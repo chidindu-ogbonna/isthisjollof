@@ -65,8 +65,20 @@ export const meta = [
 
 export const icons = [
   {
+    name: 'mobile-web-app-capable',
+    content: 'yes',
+  },
+  {
     name: 'apple-mobile-web-app-capable',
     content: 'yes',
+  },
+  {
+    name: 'apple-mobile-web-app-title',
+    content: 'Is This Jollof?',
+  },
+  {
+    name: 'apple-mobile-web-app-status-bar-style',
+    content: '#040c14',
   },
   {
     rel: 'icon',

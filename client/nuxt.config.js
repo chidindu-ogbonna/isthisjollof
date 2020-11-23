@@ -47,7 +47,7 @@ export default {
       name: 'IsThisJollof',
       short_name: 'IsThisJollof',
       description: 'Find out if that food is jollof rice or not',
-      start_url: '/?standalone=true',
+      start_url: '/?utm_source=homescreen',
       display: 'standalone',
       theme_color: '#040c14',
       background_color: '#040c14',
