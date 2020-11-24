@@ -2,6 +2,7 @@
   <header
     v-if="$route.name !== 'result'"
     class="fixed left-0 right-0 z-20 flex items-center justify-between w-full max-w-screen-lg px-4 py-2 mx-auto"
+    :class="$route.name === 'about' ? 'bg-dark-gray' : 'bg-transparent'"
   >
     <n-link
       v-ripple
