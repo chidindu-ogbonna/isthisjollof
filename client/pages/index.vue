@@ -56,11 +56,9 @@ export default {
     },
 
     photoSelected(event) {
-      // console.log('done')
       if (event.target && event.target.files.length > 0) {
         this.$store.dispatch('log/event', { action: 'picture_selected' })
-        const imageURL = URL.createObjectURL(event.target.files[0])
-        this.$store.commit('app/setImage', imageURL)
+        this.$store.commit('app/setImage', event.target.files[0])
         this.$router.push('/result')
       } else {
         this.$notify({

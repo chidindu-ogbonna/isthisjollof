@@ -7,12 +7,12 @@
       >
         <div
           class="flex flex-col items-center justify-center w-full h-full px-4 py-8 rounded-b-lg shadow-xl"
-          :class="[result.value ? 'bg-green' : 'bg-red']"
+          :class="[result.is_jollof ? 'bg-green' : 'bg-red']"
         >
           <div class="text-4xl font-bold text-white shake">
-            <p v-if="result.value">Is Jollof!</p>
+            <p v-if="result.is_jollof">Is Jollof!</p>
             <p v-else>Not Jollof!</p>
-            <icon-check v-if="result.value" class="w-20 h-20"></icon-check>
+            <icon-check v-if="result.is_jollof" class="w-20 h-20"></icon-check>
             <icon-cancel v-else class="w-20 h-20"></icon-cancel>
           </div>
         </div>
@@ -21,7 +21,7 @@
 
     <main class="camera__layout-content">
       <div class="img-container">
-        <img :src="selectedPhoto" alt="" />
+        <img ref="selectedPhoto" :src="imagePreview" alt="" />
         <transition name="fade">
           <div
             v-if="processing"
@@ -43,7 +43,7 @@
       </div>
 
       <input
-        ref="camera"
+        ref="cameraBtn"
         class="hidden"
         type="file"
         accept="image/*"
@@ -79,47 +79,56 @@ export default {
       processing: false,
       result: null,
       showResult: false,
+      model: null,
+      selectedFile: null,
+      imagePreview: null,
     }
   },
 
   computed: {
-    selectedPhoto() {
-      return this.$store.state.app.selectedPhoto
-    },
-
     url() {
       return 'https://isthisjollof.com/'
     },
   },
 
   created() {
-    if (!this.selectedPhoto) {
-      this.$router.push({ name: 'index' })
-    }
-  },
-
-  mounted() {
-    if (!this.selectedPhoto) {
+    const selectedFile = this.$store.state.app.selectedFile
+    if (!selectedFile) {
       this.$router.push({ name: 'index' })
     } else {
+      this.imagePreview = URL.createObjectURL(selectedFile)
+      this.selectedFile = selectedFile
       this.processImage()
     }
   },
 
   methods: {
-    processImage() {
-      this.processing = true
-      setTimeout(() => {
-        this.showResult = true
-        this.result = { value: true }
-        this.$store.dispatch('log/event', { action: 'picture_processed' })
+    async processImage() {
+      try {
+        this.processing = true
+
+        const result = await this.$store.dispatch('app/predictImage', {
+          image: this.selectedFile,
+        })
         this.processing = false
-      }, 3000)
+        this.result = result
+        this.showResult = true
+      } catch (error) {
+        console.log(error)
+        this.processing = false
+        this.showResult = false
+        this.$notify({
+          type: 'error',
+          title: error.name,
+          text: 'Model was not loaded properly',
+        })
+        this.$store.dispatch('log/event', { action: 'error', error })
+      }
     },
 
     openCamera() {
       this.$store.dispatch('log/event', { action: 'camera_opened' })
-      const cameraBtn = this.$refs.camera
+      const cameraBtn = this.$refs.cameraBtn
       cameraBtn.click()
     },
 
@@ -133,9 +142,10 @@ export default {
 
       if (event.target && event.target.files.length > 0) {
         this.$store.dispatch('log/event', { action: 'picture_selected' })
-        const imageURL = URL.createObjectURL(event.target.files[0])
-        this.$store.commit('app/setImage', imageURL)
-        this.processing = true
+        const selectedFile = event.target.files[0]
+        this.imagePreview = URL.createObjectURL(selectedFile)
+        this.selectedFile = selectedFile
+
         this.processImage()
       } else {
         this.$notify({
