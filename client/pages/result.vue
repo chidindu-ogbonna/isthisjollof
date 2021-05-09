@@ -114,7 +114,7 @@ export default {
         this.result = result
         this.showResult = true
       } catch (error) {
-        console.log(error)
+        // console.log(error)
         this.processing = false
         this.showResult = false
         this.$notify({
