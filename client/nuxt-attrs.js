@@ -24,10 +24,14 @@ export const meta = [
   {
     hid: 'og:site_name',
     property: 'og:site_name',
-    content: 'isthisjollof.com',
+    content: 'isthisjollof.web.app',
   },
-  { name: 'twitter:url', content: 'https://isthisjollof.com' },
-  { hid: 'og:url', property: 'og:url', content: 'https://isthisjollof.com' },
+  { name: 'twitter:url', content: 'https://isthisjollof.web.app' },
+  {
+    hid: 'og:url',
+    property: 'og:url',
+    content: 'https://isthisjollof.web.app',
+  },
   { name: 'twitter:creator', content: '@chidinduogbonna' },
   {
     hid: 'twitter:description',

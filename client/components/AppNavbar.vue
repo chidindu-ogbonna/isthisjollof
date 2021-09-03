@@ -62,7 +62,7 @@ export default {
         this.$store.dispatch('log/event', { action, content_type: 'app_share' })
       } else {
         this.$store.dispatch('log/event', { action, content_type: 'web_share' })
-        const link = `http://twitter.com/share?text=${'Check this out: Is This Jollof?'}&url=https://isthisjollof.com`
+        const link = `http://twitter.com/share?text=${'Check this out: Is This Jollof?'}&url=https://isthisjollof.web.app`
         window.open(link, '_blank')
       }
     },

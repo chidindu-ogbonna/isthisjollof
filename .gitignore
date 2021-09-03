@@ -277,3 +277,8 @@ service_account.json
 .DS_Store
 
 models/
+converted_savedmodel
+isthisjollof-turk
+model
+converted_keras.zip
+converted_savedmodel.zip
