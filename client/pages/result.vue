@@ -7,21 +7,30 @@
       >
         <div
           class="flex flex-col items-center justify-center w-full h-full px-4 py-8 rounded-b-lg shadow-xl"
-          :class="[result.is_jollof ? 'bg-green' : 'bg-red']"
+          :class="[result ? 'bg-green' : 'bg-red']"
         >
           <div class="text-4xl font-bold text-white shake">
-            <p v-if="result.is_jollof">Is Jollof!</p>
+            <p v-if="result">Is Jollof!</p>
             <p v-else>Not Jollof!</p>
-            <icon-check v-if="result.is_jollof" class="w-20 h-20"></icon-check>
+            <icon-check v-if="result" class="w-20 h-20"></icon-check>
             <icon-cancel v-else class="w-20 h-20"></icon-cancel>
           </div>
         </div>
       </div>
     </transition>
 
+    <div class="fixed h-20 w-full">
+      <canvas id="randomness"></canvas>
+    </div>
+
     <main class="camera__layout-content">
       <div class="img-container">
-        <img ref="selectedPhoto" :src="imagePreview" alt="" />
+        <img
+          ref="selectedPhoto"
+          :src="imagePreview"
+          alt=""
+          @load="imageLoaded"
+        />
         <transition name="fade">
           <div
             v-if="processing"
@@ -36,7 +45,7 @@
               "
             >
               <app-loader class="mb-4"></app-loader>
-              <p class="text-sm text-gray-1">Image processing...</p>
+              <p class="text-sm text-gray-1">{{ loadingText }}</p>
             </div>
           </div>
         </transition>
@@ -71,6 +80,8 @@
 </template>
 
 <script>
+import * as tf from '@tensorflow/tfjs'
+
 export default {
   name: 'Result',
 
@@ -82,12 +93,13 @@ export default {
       model: null,
       selectedFile: null,
       imagePreview: null,
+      loadingText: '',
     }
   },
 
   computed: {
     url() {
-      return 'https://isthisjollof.com/'
+      return 'https://isthisjollof.web.app/'
     },
   },
 
@@ -98,23 +110,38 @@ export default {
     } else {
       this.imagePreview = URL.createObjectURL(selectedFile)
       this.selectedFile = selectedFile
-      this.processImage()
     }
   },
 
   methods: {
-    async processImage() {
+    async imageLoaded() {
       try {
         this.processing = true
+        this.loadingText = 'Model loading...'
+        await tf.ready()
+        this.loadingText = 'Image processing...'
 
-        const result = await this.$store.dispatch('app/predictImage', {
-          image: this.selectedFile,
+        tf.tidy(() => {
+          const modelPath = '/model/model.json'
+          tf.loadLayersModel(modelPath).then((model) => {
+            const image = this.$refs.selectedPhoto
+            const imageTensor = tf.browser.fromPixels(image)
+
+            const readyfied = tf.image
+              .resizeBilinear(imageTensor, [224, 224], true)
+              .div(255)
+              .reshape([1, 224, 224, 3])
+            const results = model.predict(readyfied)
+            const resultsArray = results.dataSync()
+            const isJollof = resultsArray[0] > 0.7
+
+            this.result = isJollof
+            this.processing = false
+            this.showResult = true
+          })
         })
-        this.processing = false
-        this.result = result
-        this.showResult = true
       } catch (error) {
-        // console.log(error)
+        console.log('Error: ', error)
         this.processing = false
         this.showResult = false
         this.$notify({
@@ -171,7 +198,7 @@ export default {
         this.$store.dispatch('log/event', { action, content_type: 'app_share' })
       } else {
         this.$store.dispatch('log/event', { action, content_type: 'web_share' })
-        const link = `http://twitter.com/share?text=${'Check this out: Is This Jollof?'}&url=https://isthisjollof.com`
+        const link = `http://twitter.com/share?text=${'Check this out: Is This Jollof?'}&url=https://isthisjollof.web.app`
         window.open(link, '_blank')
       }
     },
